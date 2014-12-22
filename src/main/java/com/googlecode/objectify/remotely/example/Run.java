@@ -22,8 +22,8 @@ public class Run extends HttpServlet {
 		ObjectifyService.setFactory(new OurObjectifyFactory());
 
 		RemoteApiOptions options = new RemoteApiOptions()
-//				.server("localhost", 8080)
 				.server("voodoodyne1.appspot.com", 443)
+//				.server("localhost", 8080)
 				.credentials("asdf", "asdf");
 		Remotely.setOptions(options);
 	}
@@ -46,9 +46,27 @@ public class Run extends HttpServlet {
 
 						Thing fetched = ofy().load().entity(thing).now();
 
-						write(resp, "Thing name after roundtrip is: " + fetched.getName());
+						write(resp, "Thing before roundtrip: " + thing);
+						write(resp, "Thing after roundtrip: " + fetched);
 					}
 				});
+			}
+		});
+
+		run(new VoidWork() {
+			@Override
+			public void vrun() {
+				Remotely.execute(new VoidCallable() {
+					@Override
+					public void run() {
+						write(resp, "List of things:");
+
+						for (Thing th : ofy().load().type(Thing.class)) {
+							write(resp, th.toString());
+						}
+					}
+				});
+
 			}
 		});
 	}

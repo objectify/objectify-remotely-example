@@ -3,7 +3,7 @@ package com.googlecode.objectify.remotely.example;
 import com.google.appengine.api.datastore.AsyncDatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceConfig;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.remotely.RemoteAsyncDatastoreService;
+import com.googlecode.objectify.remotely.RemoteWrapper;
 
 /**
  */
@@ -15,6 +15,6 @@ public class OurObjectifyFactory extends ObjectifyFactory {
 
 	@Override
 	protected AsyncDatastoreService createRawAsyncDatastoreService(DatastoreServiceConfig cfg) {
-		return RemoteAsyncDatastoreService.create(super.createRawAsyncDatastoreService(cfg));
+		return (AsyncDatastoreService)RemoteWrapper.create(super.createRawAsyncDatastoreService(cfg));
 	}
 }
